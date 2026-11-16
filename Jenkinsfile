@@ -1,29 +1,24 @@
-
-pipeline {
+pipeline{
     agent any
-
-    stages {
-
-        stage('Build') {
+    stages{
+        stage(checkout){
             steps {
-                echo 'Starting application build'
-                sh 'pwd'
-                sh 'ls -l'
+                echo 'downloading scm'
+                checkout scm
+
             }
         }
-
-        stage('Test') {
+        stage(build) {
             steps {
-                echo 'Running Python application'
-                sh 'python3 app.py'
+                echo 'build docker image'
+                sh 'sudo docker build -t python-image .'
             }
         }
-
-        stage('Deploy') {
+        stage(deploy){
             steps {
-                echo 'Application deployment completed'
+                echo 'deploy the image'
+                sh 'sudo docker run -dit --name c1 -p 80:80 python-image '
             }
         }
-
     }
 }
