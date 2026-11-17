@@ -11,13 +11,13 @@ pipeline{
         stage('build') {
             steps {
                 echo 'build docker image'
-                sh 'sudo docker build -t python-image .'
+                sh 'docker build -t python-image .'
             }
         }
         stage('deploy'){
             steps {
                 echo 'deploy the image'
-                sh 'sudo docker run -dit --name c1 -p 80:80 python-image '
+                sh 'docker run -dit --name c1 -p 80:80 python-image '
             }
         }
     }
