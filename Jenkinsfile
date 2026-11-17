@@ -17,6 +17,7 @@ pipeline{
         stage('deploy'){
             steps {
                 echo 'deploy the image'
+                sh 'docker rm -f c1 || true'
                 sh 'docker run -dit --name c1 -p 80:80 python-image '
             }
         }
