@@ -8,5 +8,5 @@ class SimpleHandler(BaseHTTPRequestHandler):
         self.wfile.write(b"Listening on port 80!")
 
 server = HTTPServer(("0.0.0.0", 80), SimpleHandler)
-print("Server running on port 80...")
+print("Server running on port 80...Hello World")
 server.serve_forever()
