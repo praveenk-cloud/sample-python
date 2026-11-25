@@ -1,26 +1,40 @@
-pipeline{
-    agent {
-        label 'linux-agent-1'
-    }
-    stages{
-        stage('checkout'){
-            steps {
-                echo 'downloading scm'
-                checkout scm
 
+pipeline {
+
+    agent {
+        label 'agent-node'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
             }
         }
-        stage('build') {
+
+        stage('Build Docker Image') {
             steps {
-                echo 'build docker image'
-                sh 'docker build -t python-image .'
+                sh 'docker build -t myapp .'
             }
         }
-        stage('deploy'){
+
+        stage('Deploy Application') {
             steps {
-                echo 'deploy the image'
-                sh 'docker rm -f c1 || true'
-                sh 'docker run -dit --name c1 -p 80:80 python-image '
+                sh 'docker rm -f myapp-container || true'
+
+                sh '''
+                    docker run -d \
+                    --name myapp-container \
+                    -p 80:80 \
+                    myapp
+                '''
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh 'docker ps'
             }
         }
     }
