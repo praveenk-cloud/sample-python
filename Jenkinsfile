@@ -5,53 +5,28 @@ pipeline {
     }
 
     stages {
-
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t myapp .'
-            }
-        }
-
-        stage('Deploy Application') {
+        stage('Check Agent') {
             steps {
                 sh '''
-                    docker rm -f myapp-container || true
-
-                    docker run -d \
-                    --name myapp-container \
-                    -p 80:80 \
-                    myapp
+                    echo "Hello from Jenkins Agent!"
+                    echo "Hostname:"
+                    hostname
+                    echo "Current User:"
+                    whoami
+                    echo "Current Directory:"
+                    pwd
                 '''
             }
         }
 
-        stage('Verify Deployment') {
+        stage('Create Folder') {
             steps {
                 sh '''
-                    docker ps
-                    curl -f http://localhost
+                    mkdir -p ~/jenkins-deployment
+                    echo "Folder created successfully!"
+                    ls -ld ~/jenkins-deployment
                 '''
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Application deployed successfully on Agent VM!'
-        }
-
-        failure {
-            echo 'Deployment failed!'
-        }
-
-        always {
-            echo 'Jenkins pipeline execution completed.'
         }
     }
 }
